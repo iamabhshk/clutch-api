@@ -14,6 +14,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   profile   Profile?
+  posts     Post[]
+  reactions Reaction[]
 }
 
 model Profile {
@@ -25,4 +27,57 @@ model Profile {
   avatarUrl   String?
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id])
+}
+
+model Game {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  genre       String?
+  coverUrl    String?
+  description String?
+  createdAt   DateTime @default(now())
+  posts       Post[]
+}
+
+model Post {
+  id        String     @id @default(uuid())
+  title     String
+  body      String?
+  type      PostType   @default(DISCUSSION)
+  isSpoiler Boolean    @default(false)
+  authorId  String
+  gameId    String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  author    User       @relation(fields: [authorId], references: [id])
+  game      Game       @relation(fields: [gameId], references: [id])
+  reactions Reaction[]
+}
+
+enum PostType {
+  DISCUSSION
+  CLIP
+  REVIEW
+  GUIDE
+  MEME
+}
+
+model Reaction {
+  id        String       @id @default(uuid())
+  type      ReactionType
+  userId    String
+  postId    String
+  createdAt DateTime     @default(now())
+  user      User         @relation(fields: [userId], references: [id])
+  post      Post         @relation(fields: [postId], references: [id])
+
+  @@unique([userId, postId, type])
+}
+
+enum ReactionType {
+  GG
+  TRASH
+  FIRE
+  RAGE
 }

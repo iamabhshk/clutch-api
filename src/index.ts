@@ -2,6 +2,9 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRouter from './routes/auth';
+import gamesRouter from './routes/games';
+import posts from './routes/posts';
+
 dotenv.config();
 
 const app = express();
@@ -15,7 +18,8 @@ app.use(cors({
 
 app.use(express.json());
 app.use('/api/auth', authRouter);
-
+app.use('/api/games', gamesRouter);
+app.use('/api/posts', posts);
 app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'ok' });
 });

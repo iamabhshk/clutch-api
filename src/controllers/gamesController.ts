@@ -20,7 +20,10 @@ export const getGameBySlug = async (req: Request, res: Response) => {
                 posts: {
                     include: {
                         author: {
-                            include: { profile: true }
+                            select: {
+                                id: true,
+                                profile: { select: { gamertag: true } }
+                            }
                         }
                     }
                 }
